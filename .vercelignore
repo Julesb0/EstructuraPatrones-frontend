@@ -1,0 +1,17 @@
+# Vercel ignore
+.git
+.gitignore
+README.md
+.env.example
+.env.local
+.env.development
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+.vscode
+.idea
+*.iml
+node_modules
+dist

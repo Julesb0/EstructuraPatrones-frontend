@@ -1,11 +1,13 @@
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabaseClient';
+
+export type ChatMessageCategory = 'LEGAL' | 'FINANCE' | 'MARKETING' | 'OTHER';
 
 export interface ChatMessage {
   id: string;
   userId: string;
   role: 'USER' | 'BOT';
   content: string;
-  category: 'LEGAL' | 'FINANCE' | 'MARKETING' | 'OTHER';
+  category: ChatMessageCategory;
   createdAt: string;
 }
 

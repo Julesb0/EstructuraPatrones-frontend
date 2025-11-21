@@ -53,7 +53,7 @@ function Layout({ handleLogout }: { handleLogout: () => void }) {
     <div>
       <nav className="nav">
         <div className="nav-container">
-          <Link to="/dashboard" className="nav-brand">Entrepreneur Platform</Link>
+          <Link to="/dashboard" className="nav-brand">HotCash</Link>
           <div className="nav-links">
             <Link to="/dashboard" className="nav-link">Dashboard</Link>
             <Link to="/dashboard/profile" className="nav-link">Profile</Link>

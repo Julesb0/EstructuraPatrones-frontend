@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, User, Filter, History, Sparkles } from 'lucide-react';
-import { chatbotService, ChatMessage, ChatbotResponse } from '../services/chatbot';
+import { chatbotService, ChatMessage, ChatbotResponse, ChatMessageCategory } from '../services/chatbot';
 import { useAuth } from '../hooks/useAuth';
 import { toast } from 'sonner';
 

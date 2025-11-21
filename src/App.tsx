@@ -8,6 +8,7 @@ import DashboardModern from './pages/DashboardModern';
 import ProfilePage from './pages/ProfilePage';
 import ChatbotPage from './pages/ChatbotPage';
 import AuthCallback from './pages/AuthCallback';
+import ModernHeader from './components/layout/ModernHeader';
 
 function App() {
   const handleLogout = () => {
@@ -50,25 +51,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function Layout({ handleLogout }: { handleLogout: () => void }) {
-  const username = localStorage.getItem('username') || 'User';
-
   return (
-    <div>
-      <nav className="nav">
-        <div className="nav-container">
-          <Link to="/dashboard" className="nav-brand">HotCash</Link>
-          <div className="nav-links">
-            <Link to="/dashboard" className="nav-link">Dashboard</Link>
-            <Link to="/dashboard/profile" className="nav-link">Profile</Link>
-            <Link to="/dashboard/chatbot" className="nav-link">Asistente</Link>
-            <span style={{ color: 'white', marginRight: '20px' }}>Welcome, {username}</span>
-            <button onClick={handleLogout} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-              Logout
-            </button>
-          </div>
-        </div>
-      </nav>
-      <div className="container">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <ModernHeader handleLogout={handleLogout} />
+      <div className="pt-16">
         <Outlet />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BusinessPlan } from '../api/client';
+import { BusinessPlan, getJson } from '../api/client';
 import { 
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, AreaChart, Area
@@ -59,46 +59,29 @@ function DashboardUltra() {
 
   const fetchData = async () => {
     try {
-      // Simular datos del backend
-      const mockPlans: BusinessPlan[] = [
-        {
-          id: '1',
-          title: 'App de Delivery Saludable',
-          summary: 'Plataforma de delivery enfocada en comida saludable',
-          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-          updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-        },
-        {
-          id: '2',
-          title: 'E-commerce Eco-Friendly',
-          summary: 'Tienda online de productos sostenibles',
-          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 12).toISOString(),
-          updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString()
-        },
-        {
-          id: '3',
-          title: 'Servicio de IA para Negocios',
-          summary: 'Asistente de inteligencia artificial para PYMES',
-          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(),
-          updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString()
-        }
-      ];
+      // Fetch business plans from backend
+      const plansData = await getJson('/api/business-plans');
+      setPlans(plansData);
 
-      setPlans(mockPlans);
+      // Fetch analytics from backend
+      const analyticsData = await getJson('/api/analytics/summary');
+      
+      // Update stats with backend data
       setStats({
-        totalPlans: mockPlans.length,
-        completedPlans: 1,
-        inProgressPlans: 2,
-        recentActivities: 8,
-        totalRevenue: 24500,
-        activeUsers: 127
+        totalPlans: analyticsData.totalPlans || plansData.length,
+        completedPlans: analyticsData.completedPlans || 0,
+        inProgressPlans: analyticsData.inProgressPlans || plansData.length,
+        recentActivities: analyticsData.totalPlans || plansData.length,
+        totalRevenue: analyticsData.estimatedRevenue || 0,
+        activeUsers: 1 // Current user
       });
 
+      // Generate mock activities for now (can be enhanced later)
       const mockActivities: Activity[] = [
         {
           id: '1',
           type: 'plan_created',
-          description: '¡Felicidades! Has creado un nuevo plan de negocio: "App de Delivery Saludable"',
+          description: '¡Felicidades! Has creado un nuevo plan de negocio',
           timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
           icon: FileText,
           color: 'text-blue-400'
@@ -106,32 +89,26 @@ function DashboardUltra() {
         {
           id: '2',
           type: 'milestone_reached',
-          description: '¡Meta alcanzada! Has completado el 75% de tu plan "E-commerce Eco-Friendly"',
+          description: '¡Meta alcanzada! Has completado planes de negocio',
           timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
           icon: Target,
           color: 'text-green-400'
-        },
-        {
-          id: '3',
-          type: 'ai_recommendation',
-          description: 'Nueva recomendación de IA: Optimiza tu modelo de ingresos para mayor rentabilidad',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-          icon: Zap,
-          color: 'text-purple-400'
-        },
-        {
-          id: '4',
-          type: 'achievement_unlocked',
-          description: '¡Logro desbloqueado! "Emprendedor Dedicado" por trabajar 7 días seguidos',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-          icon: Award,
-          color: 'text-yellow-400'
         }
       ];
       setActivities(mockActivities);
 
     } catch (error) {
       console.error('Error fetching data:', error);
+      // Fallback to mock data if backend is not available
+      setPlans([]);
+      setStats({
+        totalPlans: 0,
+        completedPlans: 0,
+        inProgressPlans: 0,
+        recentActivities: 0,
+        totalRevenue: 0,
+        activeUsers: 1
+      });
     } finally {
       setLoading(false);
     }

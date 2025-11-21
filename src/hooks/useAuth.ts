@@ -33,16 +33,25 @@ export const useAuth = (): UseAuthReturn => {
   }
 
   const login = async (email: string, password: string, recaptchaToken: string) => {
-    const response = await postJson('/api/auth/login', {
-      email,
-      password,
-      recaptchaToken,
-    })
+    try {
+      const response = await postJson('/api/auth/login', {
+        email,
+        password,
+        recaptchaToken,
+      })
 
-    localStorage.setItem('token', response.token)
-    localStorage.setItem('username', response.username)
-    localStorage.setItem('email', email)
-    navigate('/dashboard')
+      if (response.token) {
+        localStorage.setItem('token', response.token)
+        localStorage.setItem('username', response.username || email)
+        localStorage.setItem('email', email)
+        navigate('/dashboard')
+      } else {
+        throw new Error('No se recibió token de autenticación')
+      }
+    } catch (error) {
+      console.error('Error en login:', error)
+      throw error
+    }
   }
 
   const logout = () => {

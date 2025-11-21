@@ -13,7 +13,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
 }) => {
   const [loading, setLoading] = useState<string | null>(null);
 
-  const handleSocialLogin = async (provider: 'google' | 'microsoft' | 'facebook') => {
+  const handleSocialLogin = async (provider: 'google') => {
     setLoading(provider);
     
     try {
@@ -22,19 +22,35 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         ? `${window.location.origin}/register-social?provider=${provider}`
         : `${window.location.origin}/auth/callback`;
 
-      // Simular el proceso de autenticación social
-      // En producción, esto se conectaría con Supabase o el servicio correspondiente
-      console.log(`Iniciando login con ${provider}, redirigiendo a: ${redirectTo}`);
-      
-      // Simular un pequeño delay para la experiencia de usuario
-      setTimeout(() => {
-        // En producción, aquí iría la lógica real de autenticación
-        window.location.href = redirectTo;
-      }, 1000);
+      // Conectar con el backend para autenticación social
+      const response = await fetch(`${(import.meta as any).env.VITE_API_URL || 'http://localhost:8080'}/api/auth/social-login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider: provider,
+          redirectTo: redirectTo
+        }),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Error en login con ${provider}`);
+      }
+
+      const data = await response.json();
+      
+      // Guardar token y username en localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.username);
+      
+      // Redirigir al dashboard
+      window.location.href = '/dashboard';
+      
     } catch (error) {
       console.error(`Error en login con ${provider}:`, error);
-      onSocialLoginError(`Error al iniciar sesión con ${provider}. Por favor intenta de nuevo.`);
+      onSocialLoginError(error instanceof Error ? error.message : `Error al iniciar sesión con ${provider}. Por favor intenta de nuevo.`);
     } finally {
       setLoading(null);
     }
@@ -53,29 +69,6 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         </svg>
       ),
       color: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300',
-    },
-    {
-      name: 'microsoft',
-      label: 'Continuar con Microsoft',
-      icon: () => (
-        <svg className="w-5 h-5" viewBox="0 0 24 24">
-          <path fill="#f35325" d="M11.4 11.4H0V0h11.4z"/>
-          <path fill="#81bc06" d="M24 11.4H12.6V0H24z"/>
-          <path fill="#05a6f0" d="M11.4 24H0V12.6h11.4z"/>
-          <path fill="#ffba08" d="M24 24H12.6V12.6H24z"/>
-        </svg>
-      ),
-      color: 'bg-blue-600 hover:bg-blue-700 text-white',
-    },
-    {
-      name: 'facebook',
-      label: 'Continuar con Facebook',
-      icon: () => (
-        <svg className="w-5 h-5" viewBox="0 0 24 24">
-          <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-      ),
-      color: 'bg-blue-500 hover:bg-blue-600 text-white',
     },
   ];
 

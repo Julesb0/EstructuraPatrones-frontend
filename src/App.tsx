@@ -5,6 +5,8 @@ import Register from './pages/Register';
 import SocialRegister from './pages/SocialRegister';
 import DashboardUltra from './pages/DashboardUltra';
 import ProfilePage from './pages/ProfilePage';
+import PlansPage from './pages/PlansPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 import ChatbotPage from './pages/ChatbotPage';
 import AuthCallback from './pages/AuthCallback';
 import ModernHeader from './components/layout/ModernHeader';
@@ -34,10 +36,12 @@ function App() {
           }
         >
           <Route index element={<DashboardUltra />} />
+          <Route path="plans" element={<PlansPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="chatbot" element={<ChatbotPage />} />
         </Route>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<ProtectedRoute><Navigate to="/dashboard" replace /></ProtectedRoute>} />
       </Routes>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, User, Settings, LogOut, Briefcase, BarChart3, Home } from 'lucide-react';
+import { Menu, X, User, Settings, LogOut, Briefcase, BarChart3, Home, FileText, TrendingUp } from 'lucide-react';
 
 interface ModernHeaderProps {
   handleLogout: () => void;
@@ -37,6 +37,20 @@ function ModernHeader({ handleLogout }: ModernHeaderProps) {
             >
               <Home className="w-4 h-4" />
               <span>Dashboard</span>
+            </button>
+            <button
+              onClick={() => handleNavigation('/dashboard/plans')}
+              className="text-white/80 hover:text-white transition-colors flex items-center space-x-2"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Mis Planes</span>
+            </button>
+            <button
+              onClick={() => handleNavigation('/dashboard/analytics')}
+              className="text-white/80 hover:text-white transition-colors flex items-center space-x-2"
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>Análisis</span>
             </button>
             <button
               onClick={() => handleNavigation('/dashboard/profile')}
@@ -128,6 +142,20 @@ function ModernHeader({ handleLogout }: ModernHeaderProps) {
               >
                 <Home className="w-4 h-4" />
                 <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => handleNavigation('/dashboard/plans')}
+                className="text-white/80 hover:text-white transition-colors flex items-center space-x-2 text-left"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Mis Planes</span>
+              </button>
+              <button
+                onClick={() => handleNavigation('/dashboard/analytics')}
+                className="text-white/80 hover:text-white transition-colors flex items-center space-x-2 text-left"
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span>Análisis</span>
               </button>
               <button
                 onClick={() => handleNavigation('/dashboard/profile')}

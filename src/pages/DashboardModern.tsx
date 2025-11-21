@@ -40,23 +40,52 @@ function DashboardModern() {
 
   useEffect(() => {
     fetchPlans();
+    fetchAnalytics();
     generateMockActivities();
   }, []);
 
   const fetchPlans = async () => {
     try {
-      const data = await getJson('/api/plans');
+      const data = await getJson('/api/business-plans');
       setPlans(data);
+      // Calculate stats from actual data
+      const completed = data.filter((plan: any) => plan.status === 'completed').length;
+      const inProgress = data.filter((plan: any) => plan.status === 'in_progress').length;
       setStats({
         totalPlans: data.length,
-        completedPlans: Math.floor(data.length * 0.3),
-        inProgressPlans: Math.floor(data.length * 0.7),
+        completedPlans: completed,
+        inProgressPlans: inProgress,
         recentActivities: Math.floor(data.length * 1.2)
       });
     } catch (error) {
       console.error('Error fetching plans:', error);
+      // Use mock data if backend is not available
+      setPlans([]);
+      setStats({
+        totalPlans: 0,
+        completedPlans: 0,
+        inProgressPlans: 0,
+        recentActivities: 0
+      });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    try {
+      const analytics = await getJson('/api/analytics/summary');
+      // Update stats with analytics data if available
+      if (analytics) {
+        setStats(prev => ({
+          ...prev,
+          totalPlans: analytics.totalPlans || prev.totalPlans,
+          completedPlans: analytics.completedPlans || prev.completedPlans,
+          inProgressPlans: analytics.inProgressPlans || prev.inProgressPlans,
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
     }
   };
 
@@ -87,7 +116,7 @@ function DashboardModern() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await postJson('/api/plans', newPlan);
+      await postJson('/api/business-plans', newPlan);
       setNewPlan({ title: '', summary: '' });
       setShowForm(false);
       fetchPlans();

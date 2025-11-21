@@ -1,4 +1,4 @@
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:8080';
+const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8080';
 
 export interface AuthResponse {
   token: string;
@@ -49,4 +49,35 @@ export async function getJson(endpoint: string): Promise<any> {
   }
 
   return response.json();
+}
+
+export async function putJson(endpoint: string, data: any): Promise<any> {
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function deleteJson(endpoint: string): Promise<void> {
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getJson, postJson, BusinessPlan } from '../api/client';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import './Dashboard.css';
 
 interface DashboardStats {
   totalPlans: number;
@@ -116,65 +115,76 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <div className="dashboard-container">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Cargando dashboard...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white text-lg">Cargando dashboard...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>Dashboard</h1>
-        <div className="dashboard-actions">
-          <Link to="/dashboard/profile" className="btn btn-secondary">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-white">Dashboard</h1>
+          <div className="flex gap-4">
+            <Link to="/dashboard/profile" className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
             Ver Perfil
           </Link>
-          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" onClick={() => setShowForm(true)}>
             Nuevo Plan de Negocio
           </button>
         </div>
       </div>
 
       {/* Tarjetas de estadísticas */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon plans-icon">📊</div>
-          <div className="stat-content">
-            <h3>{stats.totalPlans}</h3>
-            <p>Planes Totales</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center mb-4">
+            <div className="text-3xl mr-4">📊</div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800">{stats.totalPlans}</h3>
+              <p className="text-gray-600">Planes Totales</p>
+            </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-icon completed-icon">✅</div>
-          <div className="stat-content">
-            <h3>{stats.completedPlans}</h3>
-            <p>Planes Completados</p>
+        <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center mb-4">
+            <div className="text-3xl mr-4">✅</div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800">{stats.completedPlans}</h3>
+              <p className="text-gray-600">Planes Completados</p>
+            </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-icon progress-icon">🔄</div>
-          <div className="stat-content">
-            <h3>{stats.inProgressPlans}</h3>
-            <p>En Progreso</p>
+        <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center mb-4">
+            <div className="text-3xl mr-4">🔄</div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800">{stats.inProgressPlans}</h3>
+              <p className="text-gray-600">En Progreso</p>
+            </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-icon activity-icon">📈</div>
-          <div className="stat-content">
-            <h3>{stats.recentActivities}</h3>
-            <p>Actividades Recientes</p>
+        <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <div className="flex items-center mb-4">
+            <div className="text-3xl mr-4">📈</div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800">{stats.recentActivities}</h3>
+              <p className="text-gray-600">Actividades Recientes</p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Gráficos */}
-      <div className="charts-grid">
-        <div className="chart-card">
-          <h3>Planes por Mes</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Planes por Mes</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={plansByMonth}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -210,8 +220,8 @@ function Dashboard() {
       </div>
 
       {/* Gráfico de crecimiento */}
-      <div className="chart-card full-width">
-        <h3>Crecimiento de la Plataforma</h3>
+      <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Crecimiento de la Plataforma</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={growthData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -225,23 +235,24 @@ function Dashboard() {
       </div>
 
       {/* Actividades recientes */}
-      <div className="recent-activities">
-        <h3>Actividades Recientes</h3>
-        <div className="activities-list">
+      <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">Actividades Recientes</h3>
+        <div className="space-y-3">
           {activities.map((activity) => (
-            <div key={activity.id} className="activity-item">
-              <div className="activity-icon">
+            <div key={activity.id} className="flex items-center p-3 bg-gray-50 rounded-lg">
+              <div className="text-2xl mr-4">
                 {activity.type === 'plan_created' && '📋'}
                 {activity.type === 'plan_updated' && '✏️'}
                 {activity.type === 'profile_updated' && '👤'}
               </div>
-              <div className="activity-content">
-                <p>{activity.description}</p>
+              <div className="flex-1">
+                <p className="text-gray-800">{activity.description}</p>
                 <small>{new Date(activity.timestamp).toLocaleString()}</small>
               </div>
             </div>
           ))}
-        </div>
+      </div>
+    </div>
       </div>
 
       {/* Lista de planes */}
@@ -249,24 +260,24 @@ function Dashboard() {
         <h3>Mis Planes de Negocio</h3>
         {plans.length === 0 ? (
           <div className="empty-state">
-            <p>No tienes planes de negocio aún.</p>
-            <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+            <p className="text-gray-600 mb-4">No tienes planes de negocio aún.</p>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" onClick={() => setShowForm(true)}>
               Crear tu primer plan
             </button>
           </div>
         ) : (
           <div className="plans-grid">
             {plans.map((plan) => (
-              <div key={plan.id} className="plan-card">
-                <h4>{plan.title}</h4>
-                <p>{plan.summary}</p>
-                <div className="plan-meta">
+              <div key={plan.id} className="bg-white rounded-lg shadow p-6 border border-gray-200">
+                <h4 className="text-xl font-semibold text-gray-800 mb-2">{plan.title}</h4>
+                <p className="text-gray-600 mb-4">{plan.summary}</p>
+                <div className="text-sm text-gray-500 mb-4">
                   <small>Creado: {new Date(plan.createdAt).toLocaleDateString()}</small>
                   <small>Actualizado: {new Date(plan.updatedAt).toLocaleDateString()}</small>
                 </div>
-                <div className="plan-actions">
-                  <button className="btn btn-sm btn-secondary">Ver Detalles</button>
-                  <button className="btn btn-sm btn-outline">Editar</button>
+                <div className="flex gap-2">
+                  <button className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm transition-colors">Ver Detalles</button>
+                  <button className="border border-gray-300 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded text-sm transition-colors">Editar</button>
                 </div>
               </div>
             ))}
@@ -276,40 +287,40 @@ function Dashboard() {
 
       {/* Modal para crear nuevo plan */}
       {showForm && (
-        <div className="modal-overlay" onClick={() => setShowForm(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Nuevo Plan de Negocio</h3>
-              <button className="modal-close" onClick={() => setShowForm(false)}>×</button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowForm(false)}>
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold text-gray-800">Nuevo Plan de Negocio</h3>
+              <button className="text-gray-500 hover:text-gray-700 text-2xl" onClick={() => setShowForm(false)}>×</button>
             </div>
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="title">Título del Plan</label>
+              <div className="mb-4">
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">Título del Plan</label>
                 <input
                   type="text"
                   id="title"
                   value={newPlan.title}
                   onChange={(e) => setNewPlan({ ...newPlan, title: e.target.value })}
                   required
-                  className="form-control"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="summary">Resumen</label>
+              <div className="mb-4">
+                <label htmlFor="summary" className="block text-sm font-medium text-gray-700 mb-2">Resumen</label>
                 <textarea
                   id="summary"
                   value={newPlan.summary}
                   onChange={(e) => setNewPlan({ ...newPlan, summary: e.target.value })}
                   required
                   rows={4}
-                  className="form-control"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 />
               </div>
-              <div className="modal-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
+              <div className="flex gap-4 pt-4 border-t border-gray-200">
+                <button type="button" className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex-1" onClick={() => setShowForm(false)}>
                   Cancelar
                 </button>
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex-1">
                   Crear Plan
                 </button>
               </div>

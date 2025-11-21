@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import ChatbotPage from './pages/ChatbotPage';
 import AuthCallback from './pages/AuthCallback';
 import ModernHeader from './components/layout/ModernHeader';
+import TestTailwind from './pages/TestTailwind';
 
 function App() {
   const handleLogout = () => {
@@ -19,6 +20,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/test-tailwind" element={<TestTailwind />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register-social" element={<SocialRegister />} />

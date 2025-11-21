@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SocialRegister from './pages/SocialRegister';
-import DashboardModern from './pages/DashboardModern';
+import DashboardUltra from './pages/DashboardUltra';
 import ProfilePage from './pages/ProfilePage';
 import ChatbotPage from './pages/ChatbotPage';
 import AuthCallback from './pages/AuthCallback';
@@ -31,7 +31,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<DashboardModern />} />
+          <Route index element={<DashboardUltra />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="chatbot" element={<ChatbotPage />} />
         </Route>

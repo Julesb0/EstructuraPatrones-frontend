@@ -17,7 +17,8 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
   const handleSocialLoginClick = async (provider: OAuthProvider) => {
     try {
       console.log(`Iniciando login social con ${provider}`)
-      setError(null) // Clear previous errors
+      // Clear previous errors by calling the parent's error handler with null
+      onSocialLoginError('')
       await handleSocialLogin(provider)
       console.log(`Login social con ${provider} completado`)
       // Si llegamos aquí, el login fue exitoso
@@ -25,7 +26,6 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error al iniciar sesión social'
       console.error(`Error en login social con ${provider}:`, errorMessage)
-      setError(errorMessage)
       onSocialLoginError(errorMessage)
     }
   }

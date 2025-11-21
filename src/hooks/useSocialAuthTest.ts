@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { supabase, OAuthProvider, SocialLoginRequest } from '../lib/supabaseClient'
+import { useState } from 'react'
+import { OAuthProvider } from '../lib/supabaseClient'
 import { useNavigate } from 'react-router-dom'
 
 interface UseSocialAuthReturn {
@@ -50,7 +50,7 @@ export const useSocialAuthTest = (): UseSocialAuthReturn => {
         message: 'Mock social login successful',
         token: `mock_jwt_token_${Date.now()}`,
         user: {
-          id: `mock_user_${email.hashCode()}`,
+          id: `mock_user_${email.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0)}`,
           email: email,
           username: email.split('@')[0],
           provider: provider

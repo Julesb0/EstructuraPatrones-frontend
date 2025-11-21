@@ -11,7 +11,9 @@ function ProfilePage() {
     userId: '',
     fullName: '',
     role: 'ENTREPRENEUR',
-    country: ''
+    country: '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -83,7 +85,9 @@ function ProfilePage() {
       userId: '',
       fullName: '',
       role: 'ENTREPRENEUR',
-      country: ''
+      country: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     });
     setError('');
     setSuccess('');
@@ -192,7 +196,7 @@ function ProfilePage() {
             <div className="info-group">
               <label>Rol:</label>
               <span className="info-value">
-                {getRoleLabel(profile?.role) || 'No especificado'}
+                {profile?.role ? getRoleLabel(profile.role) : 'No especificado'}
               </span>
             </div>
 

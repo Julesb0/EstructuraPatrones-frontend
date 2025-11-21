@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProfilePage from './pages/ProfilePage';
+import ChatbotPage from './pages/ChatbotPage';
 import AuthCallback from './pages/AuthCallback';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="chatbot" element={<ChatbotPage />} />
         </Route>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
@@ -53,7 +55,9 @@ function Layout({ handleLogout }: { handleLogout: () => void }) {
         <div className="nav-container">
           <Link to="/dashboard" className="nav-brand">Entrepreneur Platform</Link>
           <div className="nav-links">
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
             <Link to="/dashboard/profile" className="nav-link">Profile</Link>
+            <Link to="/dashboard/chatbot" className="nav-link">Asistente</Link>
             <span style={{ color: 'white', marginRight: '20px' }}>Welcome, {username}</span>
             <button onClick={handleLogout} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
               Logout

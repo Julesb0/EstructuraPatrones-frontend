@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Link, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import SocialRegister from './pages/SocialRegister';
 import Dashboard from './pages/Dashboard';
 import ProfilePage from './pages/ProfilePage';
 import ChatbotPage from './pages/ChatbotPage';
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/register-social" element={<SocialRegister />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route 
           path="/dashboard" 

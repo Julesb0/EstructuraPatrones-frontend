@@ -1,51 +1,43 @@
-/**
- * TypeScript interfaces for User Profile module
- * Matching backend ProfileResponse and ProfileUpdateRequest
- */
-
-// User role types
-export type UserRole = 'ENTREPRENEUR' | 'MENTOR' | 'INVESTOR' | 'ADMIN';
-
-// Profile response from backend
 export interface UserProfile {
   userId: string;
   fullName: string;
   role: UserRole;
   country: string;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// Profile update request to backend
+export type UserRole = 'ENTREPRENEUR' | 'MENTOR' | 'INVESTOR' | 'ADMIN';
+
 export interface ProfileUpdateRequest {
   fullName: string;
   role: UserRole;
   country: string;
 }
 
-// Available roles for dropdowns
+export interface ProfileResponse {
+  userId: string;
+  fullName: string;
+  role: UserRole;
+  country: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const AVAILABLE_ROLES = [
-  { value: 'ENTREPRENEUR' as UserRole, label: 'Emprendedor' },
-  { value: 'MENTOR' as UserRole, label: 'Mentor' },
-  { value: 'INVESTOR' as UserRole, label: 'Inversor' },
-  { value: 'ADMIN' as UserRole, label: 'Administrador' }
+  { value: 'ENTREPRENEUR', label: 'Emprendedor' },
+  { value: 'MENTOR', label: 'Mentor' },
+  { value: 'INVESTOR', label: 'Inversor' },
+  { value: 'ADMIN', label: 'Administrador' }
 ];
 
-// Common countries for dropdowns
 export const COMMON_COUNTRIES = [
-  'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica',
-  'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'México', 'Nicaragua',
-  'Panamá', 'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana',
-  'Uruguay', 'Venezuela', 'España', 'Estados Unidos'
+  'México', 'Estados Unidos', 'Canadá', 'Brasil', 'Argentina', 'Colombia',
+  'Chile', 'Perú', 'España', 'Reino Unido', 'Francia', 'Alemania',
+  'Italia', 'China', 'Japón', 'Corea del Sur', 'India', 'Australia'
 ];
 
-// Helper function to get role label
 export function getRoleLabel(role: UserRole): string {
   const roleObj = AVAILABLE_ROLES.find(r => r.value === role);
   return roleObj?.label || role;
-}
-
-// Helper function to validate role
-export function isValidRole(role: string): role is UserRole {
-  return ['ENTREPRENEUR', 'MENTOR', 'INVESTOR', 'ADMIN'].includes(role);
 }

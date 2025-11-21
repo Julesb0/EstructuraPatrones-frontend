@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { postJson } from '../api/client';
 import SocialLoginButtons from '../components/auth/SocialLoginButtons';
+import CustomRecaptcha from '../components/auth/CustomRecaptcha';
 import { Mail, Lock, User, UserPlus, ArrowRight, Check } from 'lucide-react';
 
 function Register() {
@@ -12,7 +12,6 @@ function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
 
   const handleRecaptchaChange = (token: string | null) => {
@@ -45,9 +44,6 @@ function Register() {
       localStorage.setItem('username', response.username);
       navigate('/dashboard');
     } catch (err) {
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset();
-      }
       setRecaptchaToken(null);
       
       if (err instanceof Error && err.message.includes('reCAPTCHA')) {
@@ -207,12 +203,8 @@ function Register() {
               </div>
 
               <div className="py-2">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={(import.meta as any).env.VITE_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+                <CustomRecaptcha
                   onChange={handleRecaptchaChange}
-                  theme="dark"
-                  className="transform scale-90 origin-left"
                 />
               </div>
 

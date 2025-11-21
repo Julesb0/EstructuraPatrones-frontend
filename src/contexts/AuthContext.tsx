@@ -165,11 +165,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const socialLogin = async (provider: string) => {
     try {
+      // Usar la URL de producción en lugar de window.location.origin
+      const appUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+      
       // Iniciar el flujo de OAuth con Supabase
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider as 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${appUrl}/auth/callback`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',

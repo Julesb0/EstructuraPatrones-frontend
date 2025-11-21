@@ -8,8 +8,10 @@ import {
 import { 
   TrendingUp, FileText, Activity, Plus, ArrowRight, 
   Settings, User, LogOut, Menu, Home, Briefcase, BarChart3, 
-  DollarSign, Target, Award, Zap, Star, Eye, Edit3, Trash2
+  DollarSign, Target, Award, Zap, Star, Eye, Edit3, Trash2, Info, X
 } from 'lucide-react';
+import { PUBLIC_ACCESS_CONFIG } from '../config/publicAccess';
+import { useAuth } from '../contexts/AuthContext';
 
 interface DashboardStats {
   totalPlans: number;
@@ -39,6 +41,7 @@ interface QuickAction {
 }
 
 function DashboardUltra() {
+  const { user, isAuthenticated } = useAuth();
   const [plans, setPlans] = useState<BusinessPlan[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
     totalPlans: 0,
@@ -52,10 +55,22 @@ function DashboardUltra() {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
+  const [showGuestMessage, setShowGuestMessage] = useState(false);
 
   useEffect(() => {
     fetchData();
-  }, []);
+    
+    // Mostrar mensaje de invitado si no está autenticado pero tiene acceso público
+    if (PUBLIC_ACCESS_CONFIG.enablePublicAccess && !isAuthenticated) {
+      setShowGuestMessage(true);
+      // Ocultar el mensaje después de 5 segundos
+      const timer = setTimeout(() => {
+        setShowGuestMessage(false);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated]);
 
   const fetchData = async () => {
     try {
@@ -188,6 +203,23 @@ function DashboardUltra() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Mensaje de invitado para acceso público */}
+      {showGuestMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-yellow-500/20 backdrop-blur-lg border border-yellow-500/30 rounded-lg p-4 flex items-center space-x-3 animate-fade-in">
+          <Info className="w-5 h-5 text-yellow-400 flex-shrink-0" />
+          <div>
+            <p className="text-yellow-200 font-medium">{PUBLIC_ACCESS_CONFIG.guestMessage}</p>
+            <p className="text-yellow-300 text-sm">Algunas funciones pueden requerir inicio de sesión.</p>
+          </div>
+          <button 
+            onClick={() => setShowGuestMessage(false)}
+            className="text-yellow-400 hover:text-yellow-300 ml-2"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+      
       {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 z-50 w-80 bg-black/30 backdrop-blur-xl border-r border-white/20 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} xl:translate-x-0`}>
         <div className="flex items-center justify-between p-8 border-b border-white/20">

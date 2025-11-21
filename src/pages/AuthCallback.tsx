@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { completeSocialAuth } from '../lib/socialAuth'
 import LoadingSpinner from '../components/common/LoadingSpinner'
+import { PUBLIC_ACCESS_CONFIG } from '../config/publicAccess'
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate()

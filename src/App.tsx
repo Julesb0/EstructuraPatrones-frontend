@@ -13,6 +13,7 @@ import TestTailwind from './pages/TestTailwind';
 import TestPage from './pages/TestPage';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import { useAuth } from './contexts/AuthContext';
+import { PUBLIC_ACCESS_CONFIG } from './config/publicAccess';
 
 function App() {
   const { logout, isAuthenticated, isLoading } = useAuth();
@@ -37,11 +38,11 @@ function App() {
         <Route path="/register-social" element={<SocialRegister />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         
-        {/* Rutas protegidas */}
+        {/* Rutas protegidas - Acceso público al dashboard habilitado */}
         <Route 
           path="/dashboard" 
           element={
-            isAuthenticated ? (
+            PUBLIC_ACCESS_CONFIG.enablePublicAccess || isAuthenticated ? (
               <Layout handleLogout={logout} />
             ) : (
               <Navigate to="/login" replace />
@@ -55,11 +56,11 @@ function App() {
           <Route path="chatbot" element={<ChatbotPage />} />
         </Route>
         
-        {/* Ruta raíz */}
+        {/* Ruta raíz - Redirigir directamente al dashboard si el acceso público está habilitado */}
         <Route 
           path="/" 
           element={
-            isAuthenticated ? (
+            PUBLIC_ACCESS_CONFIG.enablePublicAccess || isAuthenticated ? (
               <Navigate to="/dashboard" replace />
             ) : (
               <Navigate to="/login" replace />

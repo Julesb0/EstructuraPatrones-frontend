@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { postJson } from '../api/client';
 import SocialLoginButtons from '../components/auth/SocialLoginButtons';

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, User, Settings, LogOut, Briefcase, BarChart3, Home, UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Menu, X, User, Settings, LogOut, Briefcase, BarChart3, Home } from 'lucide-react';
 
 interface ModernHeaderProps {
   handleLogout: () => void;

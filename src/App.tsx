@@ -1,9 +1,8 @@
 import React from 'react';
-import { Routes, Route, Link, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SocialRegister from './pages/SocialRegister';
-import Dashboard from './pages/Dashboard';
 import DashboardModern from './pages/DashboardModern';
 import ProfilePage from './pages/ProfilePage';
 import ChatbotPage from './pages/ChatbotPage';

@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { postJson } from '../api/client';
 import SocialLoginButtons from '../components/auth/SocialLoginButtons';
 import CustomRecaptcha from '../components/auth/CustomRecaptcha';
 import { useSocialAuthTest } from '../hooks/useSocialAuthTest';
-import { Google, Microsoft, Facebook, Mail, Lock, UserPlus, ArrowRight } from 'lucide-react';
+import { Mail, Lock, UserPlus, ArrowRight } from 'lucide-react';
 
 function Login() {
   const [email, setEmail] = useState('');

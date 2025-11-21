@@ -25,7 +25,7 @@ interface Activity {
 }
 
 function DashboardModern() {
-  const [plans, setPlans] = useState<BusinessPlan[]>([]);
+  const [, setPlans] = useState<BusinessPlan[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
     totalPlans: 0,
     completedPlans: 0,
@@ -289,7 +289,7 @@ function DashboardModern() {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${(percent! * 100).toFixed(0)}%`}
                     labelLine={false}
                   >
                     {plansByStatus.map((entry, index) => (

@@ -46,7 +46,7 @@ function DashboardModern() {
 
   const fetchPlans = async () => {
     try {
-      const data = await getJson('/api/business-plans');
+      const data = await getJson('/api/plans');
       setPlans(data);
       // Calculate stats from actual data
       const completed = data.filter((plan: any) => plan.status === 'completed').length;
@@ -116,7 +116,7 @@ function DashboardModern() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await postJson('/api/business-plans', newPlan);
+      await postJson('/api/plans', newPlan);
       setNewPlan({ title: '', summary: '' });
       setShowForm(false);
       fetchPlans();

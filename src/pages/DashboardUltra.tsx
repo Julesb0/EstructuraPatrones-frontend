@@ -60,7 +60,7 @@ function DashboardUltra() {
   const fetchData = async () => {
     try {
       // Fetch business plans from backend
-      const plansData = await getJson('/api/business-plans');
+      const plansData = await getJson('/api/plans');
       setPlans(plansData);
 
       // Fetch analytics from backend

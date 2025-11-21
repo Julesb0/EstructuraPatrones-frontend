@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getJson, postJson } from '../api/client';
+import { getJson, putJson } from '../api/client';
 import { UserProfile, AVAILABLE_ROLES, COMMON_COUNTRIES, getRoleLabel } from '../types/profile.types';
 
 function ProfilePage() {
@@ -62,7 +62,7 @@ function ProfilePage() {
     }
 
     try {
-      const response = await postJson('/api/profile/me', formData);
+      const response = await putJson('/api/profile/me', formData);
       setProfile(response);
       setSuccess('Perfil actualizado exitosamente');
       setEditing(false);

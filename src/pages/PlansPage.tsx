@@ -27,7 +27,7 @@ function PlansPage() {
   const fetchPlans = async () => {
     try {
       setLoading(true);
-      const data = await getJson('/api/business-plans');
+      const data = await getJson('/api/plans');
       setPlans(data);
     } catch (err) {
       setError('Error al cargar los planes');
@@ -45,12 +45,12 @@ function PlansPage() {
     try {
       if (editingPlan) {
         // Update existing plan
-        const updatedPlan = await putJson(`/api/business-plans/${editingPlan.id}`, formData);
+        const updatedPlan = await putJson(`/api/plans/${editingPlan.id}`, formData);
         setPlans(plans.map(plan => plan.id === editingPlan.id ? updatedPlan : plan));
         setSuccess('Plan actualizado exitosamente');
       } else {
         // Create new plan
-        const newPlan = await postJson('/api/business-plans', formData);
+        const newPlan = await postJson('/api/plans', formData);
         setPlans([...plans, newPlan]);
         setSuccess('Plan creado exitosamente');
       }
@@ -78,7 +78,7 @@ function PlansPage() {
     }
 
     try {
-      await deleteJson(`/api/business-plans/${planId}`);
+      await deleteJson(`/api/plans/${planId}`);
       setPlans(plans.filter(plan => plan.id !== planId));
       setSuccess('Plan eliminado exitosamente');
     } catch (err) {

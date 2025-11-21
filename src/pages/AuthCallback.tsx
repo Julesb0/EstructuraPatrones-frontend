@@ -1,50 +1,58 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabaseClient'
-import '../components/auth/SocialLogin.css'
+import { useAuth } from '../contexts/AuthContext'
+import { completeSocialAuth } from '../lib/socialAuth'
+import LoadingSpinner from '../components/common/LoadingSpinner'
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate()
+  const { user, isLoading } = useAuth()
 
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Manejar el callback de OAuth
-        const { data, error } = await supabase.auth.getSession()
-        
-        if (error) {
-          console.error('Error en callback OAuth:', error)
-          navigate('/login?error=oauth_failed')
+        // Si el usuario ya está autenticado, redirigir al dashboard
+        if (user) {
+          navigate('/dashboard')
           return
         }
 
-        if (data.session) {
-          // El hook useSocialAuth manejará el resto del flujo
-          // Por ahora, redirigimos al dashboard
+        // Completar el proceso de autenticación social
+        const result = await completeSocialAuth()
+        
+        if (result.success && result.user && result.token) {
+          // Guardar en localStorage
+          localStorage.setItem('token', result.token)
+          localStorage.setItem('username', result.user.username)
+          localStorage.setItem('email', result.user.email)
+          
+          // Redirigir al dashboard
           navigate('/dashboard')
         } else {
-          navigate('/login?error=no_session')
+          // Si hay error, ir al login
+          navigate('/login?error=oauth_failed')
         }
       } catch (error) {
-        console.error('Error manejando callback:', error)
+        console.error('Error en el callback de autenticación:', error)
         navigate('/login?error=callback_error')
       }
     }
 
-    handleCallback()
-  }, [navigate])
+    if (!isLoading) {
+      handleCallback()
+    }
+  }, [navigate, user, isLoading])
 
-  return (
-    <div className="auth-callback-container">
-      <div className="loading-spinner">
-        <div className="spinner"></div>
-        <h2>Procesando autenticación...</h2>
-        <p>Por favor espera mientras completamos el inicio de sesión.</p>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <LoadingSpinner message="Completando autenticación..." size="lg" />
       </div>
+    )
+  }
 
-
-    </div>
-  )
+  // Si llegamos aquí, el efecto ya debería haber redirigido
+  return null
 }
 
 export default AuthCallback

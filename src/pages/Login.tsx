@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { postJson } from '../api/client';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import SocialLoginButtons from '../components/auth/SocialLoginButtons';
 import CustomRecaptcha from '../components/auth/CustomRecaptcha';
 import { useSocialAuthTest } from '../hooks/useSocialAuthTest';
@@ -12,7 +12,7 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const { error: socialError } = useSocialAuthTest();
 
   const handleRecaptchaChange = (token: string | null) => {
@@ -34,15 +34,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await postJson('/api/auth/login', {
-        email,
-        password,
-        recaptchaToken,
-      });
-
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('username', response.username);
-      navigate('/dashboard');
+      await login(email, password, recaptchaToken);
     } catch (err) {
       setRecaptchaToken(null);
       

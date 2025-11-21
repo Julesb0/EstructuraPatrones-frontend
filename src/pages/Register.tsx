@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { postJson } from '../api/client';
 import SocialLoginButtons from '../components/auth/SocialLoginButtons';
 import CustomRecaptcha from '../components/auth/CustomRecaptcha';
@@ -12,7 +13,7 @@ function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleRecaptchaChange = (token: string | null) => {
     setRecaptchaToken(token);
@@ -33,23 +34,22 @@ function Register() {
     setLoading(true);
 
     try {
-      const response = await postJson('/api/auth/register', {
+      await postJson('/api/auth/register', {
         email,
         password,
         username,
         recaptchaToken,
       });
 
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('username', response.username);
-      navigate('/dashboard');
+      // Auto-login después del registro exitoso
+      await login(email, password, recaptchaToken);
     } catch (err) {
       setRecaptchaToken(null);
       
       if (err instanceof Error && err.message.includes('reCAPTCHA')) {
         setError('reCAPTCHA inválido. Por favor intenta de nuevo.');
       } else {
-        setError('Error en el registro. Por favor intenta de nuevo.');
+        setError('Error al registrar. Por favor intenta de nuevo.');
       }
     } finally {
       setLoading(false);
@@ -134,7 +134,6 @@ function Register() {
                 onSocialLoginError={(error) => {
                   setError(error)
                 }}
-                mode="register"
               />
               
               <div className="relative my-6">

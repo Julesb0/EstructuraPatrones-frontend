@@ -1,53 +1,22 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 interface SocialLoginButtonsProps {
   onSocialLoginSuccess: (user: any, provider: string) => void;
   onSocialLoginError: (error: string) => void;
-  mode?: 'login' | 'register';
 }
 
 const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ 
-  onSocialLoginError,
-  mode = 'login' 
+  onSocialLoginError
 }) => {
   const [loading, setLoading] = useState<string | null>(null);
+  const { socialLogin } = useAuth();
 
   const handleSocialLogin = async (provider: 'google') => {
     setLoading(provider);
-    
     try {
-      // Configurar redirección según el modo
-      const redirectTo = mode === 'register' 
-        ? `${window.location.origin}/register-social?provider=${provider}`
-        : `${window.location.origin}/auth/callback`;
-
-      // Conectar con el backend para autenticación social
-      const response = await fetch(`${(import.meta as any).env.VITE_API_URL || 'http://localhost:8080'}/api/auth/social-login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          provider: provider,
-          redirectTo: redirectTo
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Error en login con ${provider}`);
-      }
-
-      const data = await response.json();
-      
-      // Guardar token y username en localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username);
-      
-      // Redirigir al dashboard
-      window.location.href = '/dashboard';
-      
+      await socialLogin(provider);
     } catch (error) {
       console.error(`Error en login con ${provider}:`, error);
       onSocialLoginError(error instanceof Error ? error.message : `Error al iniciar sesión con ${provider}. Por favor intenta de nuevo.`);

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { Menu, X, User, Settings, LogOut, Briefcase, BarChart3, Home, FileText, TrendingUp } from 'lucide-react';
 
 interface ModernHeaderProps {
@@ -10,7 +11,8 @@ function ModernHeader({ handleLogout }: ModernHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const username = localStorage.getItem('username') || 'Usuario';
+  const { user } = useAuth();
+  const username = user?.username || 'Usuario';
 
   const handleNavigation = (path: string) => {
     navigate(path);

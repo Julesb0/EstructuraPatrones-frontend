@@ -45,7 +45,14 @@ export async function getJson(endpoint: string): Promise<any> {
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    let errorMessage = `Error HTTP ${response.status}`;
+    try {
+      const errorData = await response.json();
+      errorMessage += `: ${errorData.message || response.statusText}`;
+    } catch {
+      errorMessage += `: ${response.statusText}`;
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();

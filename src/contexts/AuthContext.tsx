@@ -45,17 +45,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const { data: { session } } = await supabase.auth.getSession();
           
           if (session?.user) {
-            // Si hay sesión en Supabase, sincronizar con nuestro sistema
-            const userData = {
-              id: session.user.id,
-              email: session.user.email!,
-              username: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'usuario'
-            };
-            
-            setUser(userData);
-            localStorage.setItem('token', session.access_token);
-            localStorage.setItem('username', userData.username);
-            localStorage.setItem('email', userData.email);
+            // Si hay sesión en Supabase, obtener token del backend
+            try {
+              const backendResponse = await postJson('/api/auth/social-login', {
+                accessToken: session.access_token,
+                email: session.user.email,
+                provider: 'google'
+              });
+              
+              // Verificar que el backend devolvió un token válido
+              if (backendResponse && backendResponse.token) {
+                const userData = {
+                  id: session.user.id,
+                  email: session.user.email!,
+                  username: backendResponse.username || session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'usuario'
+                };
+                
+                setUser(userData);
+                localStorage.setItem('token', backendResponse.token);
+                localStorage.setItem('username', userData.username);
+                localStorage.setItem('email', userData.email);
+                console.log('✅ Token JWT del backend obtenido exitosamente');
+              } else {
+                throw new Error('El backend no devolvió un token válido');
+              }
+            } catch (error) {
+              console.error('❌ Error obteniendo token del backend:', error);
+              // NO usar token de Supabase como respaldo - esto causaría errores
+              console.error('❌ No se pudo autenticar con el backend. El usuario necesita iniciar sesión nuevamente.');
+              // Limpiar cualquier dato parcial
+              localStorage.removeItem('token');
+              localStorage.removeItem('username');
+              localStorage.removeItem('email');
+              setUser(null);
+            }
           }
         }
       } catch (error) {
@@ -70,16 +93,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Escuchar cambios en la autenticación de Supabase
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        const userData = {
-          id: session.user.id,
-          email: session.user.email!,
-          username: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'usuario'
-        };
-        
-        setUser(userData);
-        localStorage.setItem('token', session.access_token);
-        localStorage.setItem('username', userData.username);
-        localStorage.setItem('email', userData.email);
+        try {
+          // Obtener token del backend cuando se inicia sesión con Supabase
+          const backendResponse = await postJson('/api/auth/social-login', {
+            accessToken: session.access_token,
+            email: session.user.email,
+            provider: 'google'
+          });
+          
+          if (backendResponse && backendResponse.token) {
+            const userData = {
+              id: session.user.id,
+              email: session.user.email!,
+              username: backendResponse.username || session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'usuario'
+            };
+            
+            setUser(userData);
+            localStorage.setItem('token', backendResponse.token);
+            localStorage.setItem('username', userData.username);
+            localStorage.setItem('email', userData.email);
+            console.log('✅ Login social exitoso - Token JWT del backend obtenido');
+          } else {
+            throw new Error('El backend no devolvió un token válido');
+          }
+        } catch (error) {
+          console.error('❌ Error en login social:', error);
+          // No guardar token de Supabase - esto causaría errores en las APIs
+          console.error('❌ Login social falló. El usuario necesita intentar nuevamente.');
+        }
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         localStorage.removeItem('token');

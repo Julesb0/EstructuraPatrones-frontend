@@ -1,6 +1,5 @@
 // Función para testear la conexión con Supabase
 import { supabase } from '../lib/supabaseClient';
-import { postJson } from '../api/client';
 
 export const testConnections = async () => {
   console.log('🧪 Iniciando tests de conexión...');

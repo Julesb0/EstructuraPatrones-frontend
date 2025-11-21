@@ -1,7 +1,7 @@
 // Script de verificación final - Agregar a tu app para probar
 
-import { supabase } from './lib/supabaseClient';
-import { postJson } from './api/client';
+import { supabase } from '../lib/supabaseClient';
+import { postJson } from '../api/client';
 
 export const runFullSystemCheck = async () => {
   console.log('🚀 INICIANDO VERIFICACIÓN COMPLETA DEL SISTEMA');
@@ -18,7 +18,7 @@ export const runFullSystemCheck = async () => {
   // 1. Verificar Supabase
   console.log('\n1️⃣ Verificando Supabase...');
   try {
-    const { data, error } = await supabase.auth.getSession();
+    const { error } = await supabase.auth.getSession();
     if (error) {
       console.error('❌ Supabase error:', error.message);
     } else {

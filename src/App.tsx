@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import SocialRegister from './pages/SocialRegister';
 import Dashboard from './pages/Dashboard';
+import DashboardModern from './pages/DashboardModern';
 import ProfilePage from './pages/ProfilePage';
 import ChatbotPage from './pages/ChatbotPage';
 import AuthCallback from './pages/AuthCallback';
@@ -30,7 +31,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Dashboard />} />
+          <Route index element={<DashboardModern />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="chatbot" element={<ChatbotPage />} />
         </Route>

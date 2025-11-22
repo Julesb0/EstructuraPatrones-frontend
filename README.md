@@ -101,7 +101,7 @@ CORS_ORIGINS=tu-frontend-url
 2. Configura las variables de entorno
 3. Deploy automático
 
-### Backend (Railway)
+### Backend (Render)
 1. Conecta tu repo de GitHub
 2. Configura las variables de entorno
 3. Railway detecta automáticamente Maven

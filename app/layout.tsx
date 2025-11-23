@@ -8,8 +8,8 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "FinMarket - Financial Management & Market Analysis",
-  description: "Professional platform for managing finances and analyzing market data",
+  title: "HotCash - Financial Management & Market Analysis",
+  description: "Manage your finances, analyze markets, and build strategic connections with industry professionals",
   generator: "v0.app",
   icons: {
     icon: [

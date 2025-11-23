@@ -36,7 +36,7 @@ export default function LoginPage() {
     <AuthLayout>
       <div className="bg-card rounded-lg shadow-lg p-8">
         <h1 className="prose-title mb-2 text-center">Iniciar Sesión</h1>
-        <p className="prose-subtitle text-center mb-6">Accede a tu cuenta FinMarket</p>
+        <p className="prose-subtitle text-center mb-6">Accede a tu cuenta HotCash</p>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div>

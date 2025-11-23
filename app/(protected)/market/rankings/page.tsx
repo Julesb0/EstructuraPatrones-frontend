@@ -14,7 +14,7 @@ interface Ranking {
 
 export default function MarketRankingsPage() {
   const [rankings, setRankings] = useState<Ranking[]>([])
-  const [platform, setPlatform] = useState("mercadolibre")
+  const [platform, setPlatform] = useState("amazon")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -48,7 +48,7 @@ export default function MarketRankingsPage() {
             value={platform}
             onChange={(e) => setPlatform(e.target.value)}
             className="input-field w-full md:w-64"
-            placeholder="mercadolibre"
+            placeholder="amazon"
           />
         </div>
 

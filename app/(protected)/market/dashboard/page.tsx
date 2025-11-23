@@ -39,7 +39,7 @@ interface ProfitabilityData {
 }
 
 export default function MarketDashboardPage() {
-  const [platform, setPlatform] = useState("mercadolibre")
+  const [platform, setPlatform] = useState("amazon")
   const [productId, setProductId] = useState("demo-1")
   const [cost, setCost] = useState("")
   const [product, setProduct] = useState<MarketProduct | null>(null)
@@ -120,7 +120,7 @@ export default function MarketDashboardPage() {
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value)}
                 className="input-field w-full"
-                placeholder="mercadolibre"
+                placeholder="amazon"
               />
             </div>
             <div>

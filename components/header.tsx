@@ -27,7 +27,7 @@ export function Header() {
   return (
     <header className="fixed top-0 right-0 left-0 z-50 bg-card border-b border-border lg:left-64">
       <div className="flex items-center justify-between px-6 py-4">
-        <h1 className="text-2xl font-bold text-primary">FinMarket</h1>
+        <h1 className="text-2xl font-bold text-primary">HotCash</h1>
         <div className="flex items-center gap-6">
           {isAuthed && (
             <>

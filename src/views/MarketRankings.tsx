@@ -6,7 +6,7 @@ type Item = { id: string, name: string, platform: string, price: number, sales: 
 const API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:8080')
 
 export default function MarketRankings() {
-  const [platform, setPlatform] = useState('mercadolibre')
+  const [platform, setPlatform] = useState('amazon')
   const [category, setCategory] = useState('all')
   const [limit, setLimit] = useState('5')
   const [items, setItems] = useState<Item[]>([])

@@ -9,7 +9,7 @@ type Profitability = { expectedROI: number, marginPercent: number, revenueTrend:
 const API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:8080')
 
 export default function MarketDashboard() {
-  const [platform, setPlatform] = useState('mercadolibre')
+  const [platform, setPlatform] = useState('amazon')
   const [productId, setProductId] = useState('demo-1')
   const [cost, setCost] = useState('')
   const [overview, setOverview] = useState<Overview | null>(null)

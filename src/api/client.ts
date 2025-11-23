@@ -1,90 +1,17 @@
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8080';
+export const API_BASE = (import.meta.env.VITE_API_BASE ?? '')
 
-export interface AuthResponse {
-  token: string;
-  username: string;
-}
-
-export interface BusinessPlan {
-  id: string;
-  title: string;
-  summary: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-function getAuthHeader() {
-  const token = localStorage.getItem('token');
-  return token ? `Bearer ${token}` : '';
-}
-
-export async function postJson(endpoint: string, data: any): Promise<any> {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+export async function postJson<T>(path: string, data: any): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Error' }))
+    const details = Array.isArray(err.fieldErrors)
+      ? ': ' + err.fieldErrors.map((fe: any) => `${fe.field} ${fe.message}`).join(', ')
+      : ''
+    throw new Error((err.error || 'Error') + details)
   }
-
-  return response.json();
-}
-
-export async function getJson(endpoint: string): Promise<any> {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
-    },
-  });
-
-  if (!response.ok) {
-    let errorMessage = `Error HTTP ${response.status}`;
-    try {
-      const errorData = await response.json();
-      errorMessage += `: ${errorData.message || response.statusText}`;
-    } catch {
-      errorMessage += `: ${response.statusText}`;
-    }
-    throw new Error(errorMessage);
-  }
-
-  return response.json();
-}
-
-export async function putJson(endpoint: string, data: any): Promise<any> {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-export async function deleteJson(endpoint: string): Promise<void> {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
+  return res.json()
 }

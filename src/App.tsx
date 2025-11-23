@@ -1,86 +1,22 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import SocialRegister from './pages/SocialRegister';
-import DashboardUltra from './pages/DashboardUltra';
-import ProfilePage from './pages/ProfilePage';
-import PlansPage from './pages/PlansPage';
-import AnalyticsPage from './pages/AnalyticsPage';
-import ChatbotPage from './pages/ChatbotPage';
-import AuthCallback from './pages/AuthCallback';
-import ModernHeader from './components/layout/ModernHeader';
-import TestTailwind from './pages/TestTailwind';
-import TestPage from './pages/TestPage';
-import LoadingSpinner from './components/common/LoadingSpinner';
-import { useAuth } from './contexts/AuthContext';
-import { PUBLIC_ACCESS_CONFIG } from './config/publicAccess';
+import { Link, Outlet } from 'react-router-dom'
+import { ui } from './theme'
 
-function App() {
-  const { logout, isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <LoadingSpinner message="Verificando autenticación..." size="lg" />
-      </div>
-    );
-  }
-
+export default function App() {
+  const isAuthed = typeof window !== 'undefined' && !!localStorage.getItem('token')
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/test-tailwind" element={<TestTailwind />} />
-        <Route path="/test-auth" element={<TestPage />} />
-        
-        {/* Rutas públicas */}
-        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" replace />} />
-        <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" replace />} />
-        <Route path="/register-social" element={<SocialRegister />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        
-        {/* Rutas protegidas - Acceso público al dashboard habilitado */}
-        <Route 
-          path="/dashboard" 
-          element={
-            PUBLIC_ACCESS_CONFIG.enablePublicAccess || isAuthenticated ? (
-              <Layout handleLogout={logout} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        >
-          <Route index element={<DashboardUltra />} />
-          <Route path="plans" element={<PlansPage />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="chatbot" element={<ChatbotPage />} />
-        </Route>
-        
-        {/* Ruta raíz - Redirigir directamente al dashboard si el acceso público está habilitado */}
-        <Route 
-          path="/" 
-          element={
-            PUBLIC_ACCESS_CONFIG.enablePublicAccess || isAuthenticated ? (
-              <Navigate to="/dashboard" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          } 
-        />
-      </Routes>
-    </div>
-  );
-}
-
-function Layout({ handleLogout }: { handleLogout: () => void }) {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <ModernHeader handleLogout={handleLogout} />
-      <div className="pt-16">
+    <div style={ui.pageBg as any}>
+      <nav style={ui.nav as any}>
+        {!isAuthed && <Link to="/inicio">Inicio</Link>}
+        {!isAuthed && <Link to="/login">Login</Link>}
+        {!isAuthed && <Link to="/register">Registro</Link>}
+        {isAuthed && <Link to="/welcome" style={ui.link as any}>Bienvenida</Link>}
+        {isAuthed && <Link to="/market" style={ui.link as any}>Market</Link>}
+        {isAuthed && <Link to="/market/rankings" style={ui.link as any}>Rankings</Link>}
+        {isAuthed && <Link to="/market/url-ai" style={ui.link as any}>URL AI</Link>}
+      </nav>
+      <div style={ui.container as any}>
         <Outlet />
       </div>
     </div>
-  );
+  )
 }
-
-export default App;

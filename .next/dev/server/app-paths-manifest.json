@@ -1,0 +1,6 @@
+{
+  "/(protected)/networking/connections/page": "app/(protected)/networking/connections/page.js",
+  "/(protected)/networking/profile/page": "app/(protected)/networking/profile/page.js",
+  "/(protected)/networking/profiles/page": "app/(protected)/networking/profiles/page.js",
+  "/(protected)/welcome/page": "app/(protected)/welcome/page.js"
+}

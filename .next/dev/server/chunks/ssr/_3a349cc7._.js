@@ -1,0 +1,482 @@
+module.exports = [
+"[project]/lib/api-client.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "acceptConnection",
+    ()=>acceptConnection,
+    "addExpense",
+    ()=>addExpense,
+    "addIncome",
+    ()=>addIncome,
+    "apiCall",
+    ()=>apiCall,
+    "deleteTransaction",
+    ()=>deleteTransaction,
+    "getAcceptedConnections",
+    ()=>getAcceptedConnections,
+    "getAuthUsers",
+    ()=>getAuthUsers,
+    "getConnectionBetweenUsers",
+    ()=>getConnectionBetweenUsers,
+    "getConnections",
+    ()=>getConnections,
+    "getDashboard",
+    ()=>getDashboard,
+    "getMarketInsights",
+    ()=>getMarketInsights,
+    "getMarketPriceHistory",
+    ()=>getMarketPriceHistory,
+    "getMarketProduct",
+    ()=>getMarketProduct,
+    "getMarketProfitability",
+    ()=>getMarketProfitability,
+    "getMarketRankings",
+    ()=>getMarketRankings,
+    "getMarketRisk",
+    ()=>getMarketRisk,
+    "getNetwork",
+    ()=>getNetwork,
+    "getNimAi",
+    ()=>getNimAi,
+    "getPendingConnections",
+    ()=>getPendingConnections,
+    "getProfile",
+    ()=>getProfile,
+    "getPublicProfiles",
+    ()=>getPublicProfiles,
+    "getTransactions",
+    ()=>getTransactions,
+    "login",
+    ()=>login,
+    "register",
+    ()=>register,
+    "rejectConnection",
+    ()=>rejectConnection,
+    "sendConnectionRequest",
+    ()=>sendConnectionRequest,
+    "upsertProfile",
+    ()=>upsertProfile
+]);
+const API_BASE = ("TURBOPACK compile-time value", "") || "";
+function getAuthHeaders() {
+    if ("TURBOPACK compile-time truthy", 1) return {};
+    //TURBOPACK unreachable
+    ;
+    const token = undefined;
+}
+async function apiCall(path, method = "GET", body) {
+    const headers = {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+    };
+    const response = await fetch(`${API_BASE}${path}`, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+    });
+    if (!response.ok) {
+        const error = await response.json().catch(()=>({
+                error: "Error"
+            }));
+        const details = Array.isArray(error.fieldErrors) ? ": " + error.fieldErrors.map((fe)=>`${fe.field} ${fe.message}`).join(", ") : "";
+        throw new Error((error.error || "Error") + details);
+    }
+    const ct = response.headers.get("Content-Type") || "";
+    if (response.status === 204) return undefined;
+    if (ct.includes("application/json")) return response.json();
+    const text = await response.text();
+    return text;
+}
+async function login(email, password) {
+    return apiCall("/api/auth/login", "POST", {
+        email: email.trim(),
+        password: password.trim()
+    });
+}
+async function register(email, password, username) {
+    return apiCall("/api/auth/register", "POST", {
+        email: email.trim(),
+        password: password.trim(),
+        username: username.trim()
+    });
+}
+async function addIncome(payload) {
+    return apiCall("/api/finance/incomes", "POST", payload);
+}
+async function addExpense(payload) {
+    return apiCall("/api/finance/expenses", "POST", payload);
+}
+async function getDashboard(userEmail, year, month) {
+    const params = new URLSearchParams({
+        userEmail,
+        year: String(year),
+        month: String(month)
+    });
+    return apiCall(`/api/finance/dashboard?${params}`, "GET");
+}
+async function getTransactions(userEmail) {
+    const params = new URLSearchParams({
+        userEmail
+    });
+    return apiCall(`/api/finance/transactions?${params}`, "GET");
+}
+async function getNimAi(userEmail, year, month) {
+    const params = new URLSearchParams({
+        userEmail,
+        year: String(year),
+        month: String(month)
+    });
+    return apiCall(`/api/finance/nimai?${params}`, "GET");
+}
+async function getMarketProduct(productId, platform) {
+    const params = new URLSearchParams({
+        platform
+    });
+    return apiCall(`/api/market/product/${encodeURIComponent(productId)}/overview?${params}`, "GET");
+}
+async function getMarketPriceHistory(productId, platform, days = 90) {
+    const params = new URLSearchParams({
+        platform,
+        days: String(days)
+    });
+    return apiCall(`/api/market/product/${encodeURIComponent(productId)}/price-history?${params}`, "GET");
+}
+async function getMarketRisk(productId, platform) {
+    const params = new URLSearchParams({
+        platform
+    });
+    return apiCall(`/api/market/product/${encodeURIComponent(productId)}/risk?${params}`, "GET");
+}
+async function getMarketProfitability(productId, platform, cost) {
+    const params = new URLSearchParams({
+        platform
+    });
+    if (cost) params.append("cost", cost);
+    return apiCall(`/api/market/product/${encodeURIComponent(productId)}/profitability?${params}`, "GET");
+}
+async function getMarketInsights(productId, platform, cost) {
+    const params = new URLSearchParams({
+        platform
+    });
+    if (cost) params.append("cost", cost);
+    return apiCall(`/api/market/product/${encodeURIComponent(productId)}/insights?${params}`, "GET");
+}
+async function getMarketRankings(platform) {
+    const params = new URLSearchParams();
+    if (platform) params.append("platform", platform);
+    return apiCall(`/api/market/rankings?${params}`, "GET");
+}
+async function getProfile() {
+    const userEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    const params = new URLSearchParams();
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const url = params.toString() ? `/api/networking/profile?${params}` : `/api/networking/profile`;
+    return apiCall(url, "GET");
+}
+async function upsertProfile(payload) {
+    const userEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    const body = {
+        bio: payload.bio || "",
+        userEmail
+    };
+    return apiCall(`/api/networking/profile`, "POST", body);
+}
+async function getPublicProfiles() {
+    return apiCall(`/api/networking/profiles`, "GET");
+}
+async function getAuthUsers(page = 1, perPage = 50) {
+    const params = new URLSearchParams({
+        page: String(page),
+        perPage: String(perPage)
+    });
+    return apiCall(`/api/auth/users?${params}`, "GET");
+}
+async function sendConnectionRequest(addresseeId, message) {
+    const requesterEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    return apiCall(`/api/networking/connections`, "POST", {
+        addresseeId,
+        message,
+        requesterEmail
+    });
+}
+async function acceptConnection(connectionId) {
+    return apiCall(`/api/networking/connections/${encodeURIComponent(connectionId)}/accept`, "PUT");
+}
+async function rejectConnection(connectionId) {
+    return apiCall(`/api/networking/connections/${encodeURIComponent(connectionId)}/reject`, "PUT");
+}
+async function getConnections() {
+    const userEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    const params = new URLSearchParams();
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const url = params.toString() ? `/api/networking/connections?${params}` : `/api/networking/connections`;
+    return apiCall(url, "GET");
+}
+async function getPendingConnections() {
+    const userEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    const params = new URLSearchParams();
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const url = params.toString() ? `/api/networking/connections/pending?${params}` : `/api/networking/connections/pending`;
+    return apiCall(url, "GET");
+}
+async function getAcceptedConnections() {
+    const userEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    const params = new URLSearchParams();
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const url = params.toString() ? `/api/networking/connections/accepted?${params}` : `/api/networking/connections/accepted`;
+    return apiCall(url, "GET");
+}
+async function getNetwork() {
+    const userEmail = (("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : null) || "";
+    const params = new URLSearchParams();
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const url = params.toString() ? `/api/networking/network?${params}` : `/api/networking/network`;
+    return apiCall(url, "GET");
+}
+async function getConnectionBetweenUsers(userId1, userId2) {
+    return apiCall(`/api/networking/connections/${encodeURIComponent(userId1)}/${encodeURIComponent(userId2)}`, "GET");
+}
+async function deleteTransaction(id, kind) {
+    const params = new URLSearchParams({
+        kind
+    });
+    return apiCall(`/api/finance/transactions/${encodeURIComponent(id)}?${params}`, "DELETE");
+}
+}),
+"[project]/app/(protected)/networking/profile/page.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>NetworkingProfilePage
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/api-client.ts [app-ssr] (ecmascript)");
+"use client";
+;
+;
+;
+function NetworkingProfilePage() {
+    const [profile, setProfile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({});
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [saving, setSaving] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        async function load() {
+            setLoading(true);
+            setError(null);
+            try {
+                const p = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getProfile"])();
+                setProfile(p);
+            } catch (e) {
+                setError(e.message);
+            } finally{
+                setLoading(false);
+            }
+        }
+        load();
+    }, []);
+    async function onSubmit(e) {
+        e.preventDefault();
+        setSaving(true);
+        setError(null);
+        try {
+            const payload = {
+                bio: profile.bio || "",
+                role: profile.role || "",
+                skills: (profile.skills || []).filter((s)=>s && s.trim() !== "")
+            };
+            const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["upsertProfile"])(payload);
+            setProfile({
+                ...profile,
+                ...res
+            });
+        } catch (e) {
+            setError(e.message);
+        } finally{
+            setSaving(false);
+        }
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "p-6 md:p-8",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "max-w-3xl mx-auto",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                    className: "prose-title mb-2",
+                    children: "Mi Perfil"
+                }, void 0, false, {
+                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                    lineNumber: 61,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    className: "prose-subtitle mb-6",
+                    children: "Configura tu perfil público"
+                }, void 0, false, {
+                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                    lineNumber: 62,
+                    columnNumber: 9
+                }, this),
+                error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded-lg mb-6",
+                    children: error
+                }, void 0, false, {
+                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                    lineNumber: 65,
+                    columnNumber: 11
+                }, this),
+                loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "text-center py-12",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "text-muted-foreground",
+                        children: "Cargando perfil..."
+                    }, void 0, false, {
+                        fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                        lineNumber: 72,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                    lineNumber: 71,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                    onSubmit: onSubmit,
+                    className: "space-y-4 bg-card rounded-lg p-6 border border-border",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "block text-sm font-medium text-foreground mb-1",
+                                    children: "Bio"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                    lineNumber: 77,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                                    value: profile.bio || "",
+                                    onChange: (e)=>setProfile({
+                                            ...profile,
+                                            bio: e.target.value
+                                        }),
+                                    className: "input-field w-full h-24"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                    lineNumber: 78,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                            lineNumber: 76,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "grid grid-cols-1 md:grid-cols-2 gap-4",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-medium text-foreground mb-1",
+                                            children: "Rol"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                            lineNumber: 87,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                            type: "text",
+                                            value: profile.role || "",
+                                            onChange: (e)=>setProfile({
+                                                    ...profile,
+                                                    role: e.target.value
+                                                }),
+                                            className: "input-field w-full",
+                                            placeholder: "ej. developer"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                            lineNumber: 88,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                    lineNumber: 86,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-medium text-foreground mb-1",
+                                            children: "Skills (separadas por coma)"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                            lineNumber: 97,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                            type: "text",
+                                            value: (profile.skills || []).join(", "),
+                                            onChange: (e)=>setProfile({
+                                                    ...profile,
+                                                    skills: e.target.value.split(",").map((s)=>s.trim()).filter(Boolean)
+                                                }),
+                                            className: "input-field w-full",
+                                            placeholder: "React, Spring, SQL"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                            lineNumber: 98,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                                    lineNumber: 96,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                            lineNumber: 85,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            type: "submit",
+                            disabled: saving,
+                            className: "btn-primary font-medium",
+                            children: saving ? "Guardando..." : "Guardar"
+                        }, void 0, false, {
+                            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                            lineNumber: 108,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+                    lineNumber: 75,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+            lineNumber: 60,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/app/(protected)/networking/profile/page.tsx",
+        lineNumber: 59,
+        columnNumber: 5
+    }, this);
+}
+}),
+];
+
+//# sourceMappingURL=_3a349cc7._.js.map
